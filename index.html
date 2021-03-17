@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Demo Kitchen Sink</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js"></script>
+	<link href="style.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/fortmatic@latest/dist/fortmatic.js"></script>
+  <script src="constants.js"></script>
+  <script src="utils.js"></script>
+  <script src="handlers.js"></script>
+	<script>
+    let fm = new Fortmatic('pk_live_F95FEECB1BE324B5');
+    web3 = new Web3(fm.getProvider());
+	</script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="menu">
+      <img alt="logo" src="logo.svg" />
+      <h4>Web3 Methods</h4>
+      <div class="list">
+        <a href="#eth-send-transaction">Send ETH Transaction</a>
+        <a href="#user-authentication">User Authentication</a>
+        <a href="#personal-sign">Signing: Personal Sign</a>
+        <a href="#sign-typed-data">Signing: Sign Typed Data</a>
+      </div>
+      <h4>Smart Contract</h4>
+      <div class="list">
+        <a href="#erc20-transfer">ERC20: Transfer</a>
+        <a href="#erc20-approve">ERC20: Approve</a>
+        <a href="#erc20-transfer-from">ERC20: TransferFrom</a>
+      </div>
+      <h4>Custom Methods</h4>
+      <div class="list">
+        <a href="#fortmatic-compose">Fortmatic: Compose</a>
+        <a href="#fortmatic-deposit">Fortmatic: Deposit</a>
+      </div>
+    </div>
+    <div class="methods">
+      <div class="method warning">
+        All transactions will be made on the mainnet!
+      </div>
+      <div class="method">
+        <h3 id="eth-send-transaction">web3.eth.sendTransaction</h3>
+        <p class="description">
+          Send a basic Ether transaction to the Ethereum network.
+        </p>
+        <div class="divider"></div>
+        <div class="action">
+          <label>value</label>
+          <input type="number" name="value" placeholder="value" />
+          <label>to</label>
+          <input type="text" name="to" placeholder="to" />
+          <a class="btn" onclick="handleEthSendTransaction(this)">Send Transaction</a>
+        </div>
+      </div>
+      <div class="method">
+        <h3 id="user-authentication">User Authentication</h3>
+        <p class="description">
+          There are many ways to authenticate a user and get their public address.
+        </p>
+        <div class="divider"></div>
+        <div class="action">
+          <a class="btn" onclick="handleGetAccounts()">web3.eth.getAccounts</a>
+          <a class="btn" onclick="handleGetCoinbase()">web3.eth.getCoinbase</a>
+          <a class="btn" onclick="handleProviderEnable()">EIP-1102: provider.enable()</a>
+          <a class="btn" onclick="handleLogoutUser()">Fortmatic: Logout User</a>
+        </div>
+      </div>
+      <div class="method">
+        <h3 id="personal-sign">sendAsync: personal_sign</h3>
+        <p class="description">
+          Signs data using a specific account (Legacy way).
+        </p>
+        <div class="divider"></div>
+        <div class="action">
+          <label>message</label>
+          <input type="text" name="message" placeholder="message" />
+          <a class="btn" onclick="handlePersonalSign(this)">Sign Data</a>
+        </div>
+      </div>
+      <div class="method">
+        <h3 id="sign-typed-data">sendAsync: eth_signTypedData</h3>
+        <p class="description">
+          Signs data using EIP-712.
+        </p>
+        <div class="divider"></div>
+        <div class="action">
+          <label>json</label>
+          <textarea name="json" rows="12"></textarea>
+          <a class="btn" onclick="handleSignTypedData(this)">Sign Data</a>
+        </div>
+      </div>
+      <div class="method">
+        <h3 id="erc20-transfer">ERC20: Transfer</h3>
+        <p class="description">
+          Transfer selected ERC20 token.
+        </p>
+        <div class="divider"></div>
+        <div class="action">
+          <label>select token</label>
+          <select name="contract-address">
+            <option value="0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359">DAI</option>
+            <option value="0xe41d2489571d322189246dafa5ebde1f4699f498">ZRX</option>
+            <option value="0xB8c77482e45F1F44dE1745F52C74426C631bDD52">BNB</option>
+            <option value="0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2">MKR</option>
+          </select>
+          <label>value</label>
+          <input type="number" name="value" placeholder="value" />
+          <label>to</label>
+          <input type="text" name="to" placeholder="to" />
+          <a class="btn" onclick="handleERC20Transfer(this)">Transfer Token</a>
+        </div>
+      </div>
+      <div class="method">
+        <h3 id="erc20-approve">ERC20: Approve</h3>
+        <p class="description">
+          Approve an address to transfer ERC20 token on your behalf.
+        </p>
+        <div class="divider"></div>
+        <div class="action">
+          <label>select token</label>
+          <select name="contract-address">
+            <option value="0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359">DAI</option>
+            <option value="0xe41d2489571d322189246dafa5ebde1f4699f498">ZRX</option>
+            <option value="0xB8c77482e45F1F44dE1745F52C74426C631bDD52">BNB</option>
+            <option value="0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2">MKR</option>
+          </select>
+          <label>amount</label>
+          <input type="number" name="amount" placeholder="amount" />
+          <label>address</label>
+          <input type="text" name="address" placeholder="address" />
+          <a class="btn" onclick="handleERC20Approve(this)">Approve Transfer</a>
+        </div>
+      </div>
+      <div class="method">
+        <h3 id="erc20-transfer-from">ERC20: TransferFrom</h3>
+        <p class="description">
+          Allows an approved address to send tokens from one account to another.
+        </p>
+        <div class="divider"></div>
+        <div class="action">
+          <label>select token</label>
+          <select name="contract-address">
+            <option value="0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359">DAI</option>
+            <option value="0xe41d2489571d322189246dafa5ebde1f4699f498">ZRX</option>
+            <option value="0xB8c77482e45F1F44dE1745F52C74426C631bDD52">BNB</option>
+            <option value="0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2">MKR</option>
+          </select>
+          <label>value</label>
+          <input type="number" name="value" placeholder="value" />
+          <label>from</label>
+          <input type="text" name="from" placeholder="from" />
+          <label>to</label>
+          <input type="text" name="to" placeholder="to" />
+          <a class="btn" onclick="handleERC20TransferFrom(this)">Send Transfer Request</a>
+        </div>
+      </div>
+      <div class="method">
+        <h3 id="fortmatic-compose">Fortmatic: Compose</h3>
+        <p class="description">
+          Edit and send a transaction to the Ethereum network.
+        </p>
+        <div class="divider"></div>
+        <div class="action">
+          <label>value</label>
+          <input type="number" name="value" placeholder="value" />
+          <label>to</label>
+          <input type="text" name="to" placeholder="to" />
+          <a class="btn" onclick="handleComposeTransaction(this)">Send Transaction</a>
+        </div>
+      </div>
+      <div class="method">
+        <h3 id="fortmatic-deposit">Fortmatic: Deposit</h3>
+        <p class="description">
+          Prompt users their QR code and Ethereum wallet address for deposits.
+        </p>
+        <div class="divider"></div>
+        <div class="action">
+          <a class="btn" onclick="handleDeposit(this)">Deposit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+	<script src="init.js"></script>
+</body>
+
+</html>
